@@ -2,10 +2,10 @@ use anyhow::Result;
 
 use crate::repository::{Domain, Repository, Service as RepoService};
 
-struct Controller<'a> {
+pub struct Controller<'a> {
     repository: Repository<'a>,
 }
-struct Service {
+pub struct Service {
     name: String,
     domains: Vec<String>,
 }
@@ -23,11 +23,11 @@ impl From<&Service> for RepoService {
 }
 
 impl<'a> Controller<'a> {
-    fn new(repository: Repository<'a>) -> Self {
+    pub fn new(repository: Repository<'a>) -> Self {
         Self { repository }
     }
 
-    fn add_service(&mut self, service: &'a Service) -> Result<()> {
+    pub fn add_service(&mut self, service: &'a Service) -> Result<()> {
         self.repository.add_service(service.into())?;
         for domain in &service.domains {
             self.repository.add_domain(&service.name, domain.into());
@@ -36,11 +36,11 @@ impl<'a> Controller<'a> {
         Ok(())
     }
 
-    fn link_services(&mut self, from: &'a Service, to: &'a Service) {
+    pub fn link_services(&mut self, from: &'a Service, to: &'a Service) {
         self.repository.add_link(&from.name, &to.name);
     }
 
-    fn get_connected_domains(&self, service: &Service) -> Vec<String> {
+    pub fn get_connected_domains(&self, service: &Service) -> Vec<String> {
         let domains = self
             .repository
             .get_service_domains(&service.name)
@@ -68,18 +68,18 @@ impl<'a> Controller<'a> {
 }
 
 impl Service {
-    fn new(name: &str) -> Self {
+    pub fn new(name: &str) -> Self {
         Self {
             name: name.to_owned(),
             domains: vec![],
         }
     }
 
-    fn add_domain(&mut self, domain: &str) {
+    pub fn add_domain(&mut self, domain: &str) {
         self.domains.push(domain.to_owned())
     }
 
-    fn get_domains(&self) -> &Vec<String> {
+    pub fn get_domains(&self) -> &Vec<String> {
         &self.domains
     }
 }

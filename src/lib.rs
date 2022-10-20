@@ -1,2 +1,2 @@
-mod controller;
+pub mod controller;
 mod repository;
